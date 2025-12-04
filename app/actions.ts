@@ -5,8 +5,8 @@ import { revalidatePath } from "next/cache";
 
 const prisma = new PrismaClient();
 
-// Agregamos "bandida" a los tipos
-type TipoRegistro = "infiel" | "migajero" | "cachudo" | "bandida";
+// Agregamos "moza" a los tipos
+type TipoRegistro = "infiel" | "migajero" | "cachudo" | "bandida" | "moza";
 
 export async function crearRegistro(formData: FormData, tipo: TipoRegistro) {
   const nombre = formData.get("nombre") as string;
@@ -36,7 +36,7 @@ export async function crearRegistro(formData: FormData, tipo: TipoRegistro) {
     iniciales,
   };
 
-  // Lógica para guardar en la tabla correcta
+  // Lógica de guardado
   if (tipo === "infiel") {
     await prisma.infiel.create({ data: datos });
   } else if (tipo === "migajero") {
@@ -45,6 +45,8 @@ export async function crearRegistro(formData: FormData, tipo: TipoRegistro) {
     await prisma.cachudo.create({ data: datos });
   } else if (tipo === "bandida") {
     await prisma.bandidaRetirada.create({ data: datos });
+  } else if (tipo === "moza") {
+    await prisma.moza.create({ data: datos });
   }
 
   // Recargamos todas las rutas
@@ -52,4 +54,5 @@ export async function crearRegistro(formData: FormData, tipo: TipoRegistro) {
   revalidatePath("/migajeros");
   revalidatePath("/cachudos");
   revalidatePath("/bandidas");
+  revalidatePath("/mozas");
 }

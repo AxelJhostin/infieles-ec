@@ -54,3 +54,15 @@ model BandidaRetirada {
   iniciales   String?
   creadoEn    DateTime @default(now())
 }
+
+model Moza {
+  id          Int      @id @default(autoincrement())
+  nombre      String
+  edad        Int?
+  ocupacion   String?
+  ciudad      String
+  descripcion String
+  redSocial   String?
+  iniciales   String?
+  creadoEn    DateTime @default(now())
+}

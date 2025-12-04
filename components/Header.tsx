@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Flame, Cookie, HeartCrack, Crown } from "lucide-react"; // Importamos Crown
+import { Flame, Cookie, HeartCrack, Crown, Gem } from "lucide-react"; // Importamos Gem (Diamante)
 
 export function Header() {
   const pathname = usePathname();
@@ -11,8 +11,9 @@ export function Header() {
     { name: "Infieles", path: "/", icon: Flame, color: "text-rose-500", bg: "bg-rose-100" },
     { name: "Migajeros", path: "/migajeros", icon: Cookie, color: "text-amber-500", bg: "bg-amber-100" },
     { name: "Cachudos", path: "/cachudos", icon: HeartCrack, color: "text-blue-500", bg: "bg-blue-100" },
-    // Nueva categoría Morada
     { name: "Bandidas", path: "/bandidas", icon: Crown, color: "text-purple-500", bg: "bg-purple-100" },
+    // Nueva categoría Fucsia
+    { name: "Mozas", path: "/mozas", icon: Gem, color: "text-fuchsia-500", bg: "bg-fuchsia-100" },
   ];
 
   return (
