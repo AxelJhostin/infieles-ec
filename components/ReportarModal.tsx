@@ -2,89 +2,90 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { PlusCircle, Loader2 } from "lucide-react";
-import { crearInfiel } from "@/app/actions"; // Importamos la lógica que acabamos de crear
+import { crearRegistro } from "@/app/actions";
 
-export function ReportarModal() {
+// Recibimos el "tipo" como propiedad
+export function ReportarModal({ tipo }: { tipo: "infiel" | "migajero" | "cachudo" }) {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  // Configuración de colores y textos según el tipo
+  const configs = {
+    infiel: { btn: "Reportar Infiel", color: "bg-rose-600 hover:bg-rose-700", ring: "focus-visible:ring-rose-500" },
+    migajero: { btn: "Exponer Migajero", color: "bg-amber-500 hover:bg-amber-600", ring: "focus-visible:ring-amber-500" },
+    cachudo: { btn: "Confesar / Reportar", color: "bg-blue-600 hover:bg-blue-700", ring: "focus-visible:ring-blue-500" },
+  };
+
+  const estilo = configs[tipo];
+
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault(); // Evita que se recargue la página a la antigua
+    event.preventDefault();
     setLoading(true);
     
     const formData = new FormData(event.currentTarget);
-    await crearInfiel(formData); // Mandamos los datos a Railway
+    await crearRegistro(formData, tipo);
     
     setLoading(false);
-    setOpen(false); // Cerramos el modal
+    setOpen(false);
   }
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="bg-pink-600 hover:bg-pink-700 text-white gap-2 font-bold shadow-lg shadow-pink-200 animate-pulse hover:animate-none">
+        <Button className={`${estilo.color} text-white gap-2 font-bold shadow-lg animate-pulse hover:animate-none`}>
           <PlusCircle className="w-5 h-5" />
-          Reportar Nuevo Caso
+          {estilo.btn}
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[500px] bg-white">
+      <DialogContent className="sm:max-w-[500px] bg-white mt-10 max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="text-pink-600 font-bold text-2xl">📝 Reportar Infiel</DialogTitle>
+          <DialogTitle className="text-gray-900 font-bold text-2xl capitalize">📝 Registro: {tipo}</DialogTitle>
           <DialogDescription>
-            Llena los datos con responsabilidad. Tu reporte aparecerá al instante.
+            La comunidad te agradece tu aporte. 100% Anónimo.
           </DialogDescription>
         </DialogHeader>
         
         <form onSubmit={handleSubmit} className="grid gap-4 py-4">
-          
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="nombre" className="font-bold">Nombre Completo *</Label>
-              <Input id="nombre" name="nombre" placeholder="Ej: Juan Pérez" required className="border-pink-200 focus-visible:ring-pink-500"/>
+              <Label htmlFor="nombre" className="font-bold">Nombre / Alias *</Label>
+              <Input id="nombre" name="nombre" required className="border-gray-200"/>
             </div>
             <div className="space-y-2">
               <Label htmlFor="ciudad" className="font-bold">Ciudad *</Label>
-              <Input id="ciudad" name="ciudad" placeholder="Ej: Quito" required className="border-pink-200 focus-visible:ring-pink-500"/>
+              <Input id="ciudad" name="ciudad" required className="border-gray-200"/>
             </div>
           </div>
-
+          
           <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
+             <div className="space-y-2">
               <Label htmlFor="edad">Edad</Label>
-              <Input id="edad" name="edad" type="number" placeholder="29" className="border-pink-200 focus-visible:ring-pink-500"/>
+              <Input id="edad" name="edad" type="number" className="border-gray-200"/>
             </div>
             <div className="space-y-2">
               <Label htmlFor="ocupacion">Ocupación</Label>
-              <Input id="ocupacion" name="ocupacion" placeholder="Contador" className="border-pink-200 focus-visible:ring-pink-500"/>
+              <Input id="ocupacion" name="ocupacion" className="border-gray-200"/>
             </div>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="descripcion" className="font-bold">La Historia (El Incidente) *</Label>
-            <Textarea id="descripcion" name="descripcion" placeholder="Cuenta qué pasó con lujo de detalles..." required className="border-pink-200 focus-visible:ring-pink-500 min-h-[100px]" />
+            <Label htmlFor="descripcion" className="font-bold">La Historia *</Label>
+            <Textarea id="descripcion" name="descripcion" required className="border-gray-200 min-h-[100px]" />
           </div>
 
           <div className="space-y-2">
             <Label htmlFor="redSocial">Link Red Social (Opcional)</Label>
-            <Input id="redSocial" name="redSocial" placeholder="https://instagram.com/..." className="border-pink-200 focus-visible:ring-pink-500"/>
+            <Input id="redSocial" name="redSocial" className="border-gray-200"/>
           </div>
 
           <DialogFooter>
-            <Button type="submit" disabled={loading} className="w-full bg-pink-600 hover:bg-pink-700 text-white font-bold text-lg">
-              {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : "🔥 Publicar en el Registro"}
+            <Button type="submit" disabled={loading} className={`w-full ${estilo.color} text-white font-bold text-lg`}>
+              {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : "🔥 Publicar"}
             </Button>
           </DialogFooter>
         </form>

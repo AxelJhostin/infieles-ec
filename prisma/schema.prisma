@@ -18,3 +18,27 @@ model Infiel {
   iniciales   String?
   creadoEn    DateTime @default(now())
 }
+
+model Migajero {
+  id          Int      @id @default(autoincrement())
+  nombre      String
+  edad        Int?
+  ocupacion   String?
+  ciudad      String
+  descripcion String
+  redSocial   String?
+  iniciales   String?
+  creadoEn    DateTime @default(now())
+}
+
+model Cachudo {
+  id          Int      @id @default(autoincrement())
+  nombre      String
+  edad        Int?
+  ocupacion   String?
+  ciudad      String
+  descripcion String
+  redSocial   String?
+  iniciales   String?
+  creadoEn    DateTime @default(now())
+}

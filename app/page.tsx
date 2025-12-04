@@ -41,9 +41,9 @@ export default async function Home() {
 
   return (
     <>
-      <main className="min-h-screen bg-gradient-to-br from-rose-50 via-pink-50 to-purple-50 font-sans selection:bg-pink-200 pb-20 overflow-hidden relative">
+      <main className="min-h-screen bg-gradient-to-br from-rose-50 via-pink-50 to-purple-50 font-sans selection:bg-pink-200 pb-20 overflow-hidden relative pt-20">
         
-        {/* Decoración de fondo (Los estilos ahora están en globals.css) */}
+        {/* Decoración de fondo */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <div className="absolute top-20 left-10 w-72 h-72 bg-pink-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
           <div className="absolute top-40 right-10 w-72 h-72 bg-rose-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
@@ -79,7 +79,6 @@ export default async function Home() {
                   </svg>
                 </span>
               </h1>
-              
               <p className="text-gray-600 text-lg md:text-xl font-medium max-w-2xl mx-auto leading-relaxed">
                 La base de datos del pueblo. Sube tu reporte anónimo o busca la verdad. 💅
               </p>
@@ -96,7 +95,8 @@ export default async function Home() {
             </div>
 
             <div className="flex justify-center pt-6">
-              <ReportarModal />
+              {/* CAMBIO IMPORTANTE: Agregamos tipo="infiel" */}
+              <ReportarModal tipo="infiel" />
             </div>
 
             <div className="flex items-center justify-center gap-2 text-sm text-gray-500">
