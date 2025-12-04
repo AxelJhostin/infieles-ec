@@ -9,7 +9,10 @@ export const dynamic = 'force-dynamic';
 
 export default async function MozasPage() {
   // LEEMOS LA TABLA DE MOZAS
-  const lista = await prisma.moza.findMany({ orderBy: { creadoEn: 'desc' } });
+  const lista = await prisma.moza.findMany({ 
+    take: 200, // <--- Solo las últimas 200
+    orderBy: { creadoEn: 'desc' } 
+  });
 
   // Cálculo real
   const nuevosEstaSemana = lista.filter(p => {

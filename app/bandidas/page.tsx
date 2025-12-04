@@ -9,7 +9,10 @@ export const dynamic = 'force-dynamic';
 
 export default async function BandidasPage() {
   // LEEMOS LA TABLA DE BANDIDAS
-  const lista = await prisma.bandidaRetirada.findMany({ orderBy: { creadoEn: 'desc' } });
+  const lista = await prisma.bandidaRetirada.findMany({ 
+    take: 200, // <--- Solo las últimas 200
+    orderBy: { creadoEn: 'desc' } 
+  });
 
   // Cálculo de nuevas esta semana
   const nuevosEstaSemana = lista.filter(p => {

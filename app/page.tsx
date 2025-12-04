@@ -11,6 +11,7 @@ export const dynamic = 'force-dynamic';
 export default async function Home() {
   
   const listaInfieles = await prisma.infiel.findMany({
+    take: 200, // <--- AQUÍ ESTÁ EL CAMBIO
     orderBy: { creadoEn: 'desc' }
   });
 

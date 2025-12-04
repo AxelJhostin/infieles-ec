@@ -8,7 +8,10 @@ const prisma = new PrismaClient();
 export const dynamic = 'force-dynamic';
 
 export default async function MigajerosPage() {
-  const lista = await prisma.migajero.findMany({ orderBy: { creadoEn: 'desc' } });
+  const lista = await prisma.migajero.findMany({ 
+    take: 200, // <--- Solo los últimos 200
+    orderBy: { creadoEn: 'desc' } 
+  });
 
   // CÁLCULO REAL: Filtramos los que se crearon hace menos de 7 días
   const nuevosEstaSemana = lista.filter(p => {

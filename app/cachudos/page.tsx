@@ -8,7 +8,10 @@ const prisma = new PrismaClient();
 export const dynamic = 'force-dynamic';
 
 export default async function CachudosPage() {
-  const lista = await prisma.cachudo.findMany({ orderBy: { creadoEn: 'desc' } });
+  const lista = await prisma.cachudo.findMany({ 
+    take: 200, // <--- Solo los últimos 200
+    orderBy: { creadoEn: 'desc' } 
+  });
 
   // CÁLCULO REAL
   const nuevosEstaSemana = lista.filter(p => {
