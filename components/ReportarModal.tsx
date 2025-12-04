@@ -10,7 +10,7 @@ import { PlusCircle, Loader2 } from "lucide-react";
 import { crearRegistro } from "@/app/actions";
 
 // Recibimos el "tipo" como propiedad
-export function ReportarModal({ tipo }: { tipo: "infiel" | "migajero" | "cachudo" }) {
+export function ReportarModal({ tipo }: { tipo: "infiel" | "migajero" | "cachudo" | "bandida" }) {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -19,6 +19,7 @@ export function ReportarModal({ tipo }: { tipo: "infiel" | "migajero" | "cachudo
     infiel: { btn: "Reportar Infiel", color: "bg-rose-600 hover:bg-rose-700", ring: "focus-visible:ring-rose-500" },
     migajero: { btn: "Exponer Migajero", color: "bg-amber-500 hover:bg-amber-600", ring: "focus-visible:ring-amber-500" },
     cachudo: { btn: "Confesar / Reportar", color: "bg-blue-600 hover:bg-blue-700", ring: "focus-visible:ring-blue-500" },
+    bandida: { btn: "Registrar Jubilación", color: "bg-purple-600 hover:bg-purple-700", ring: "focus-visible:ring-purple-500" },
   };
 
   const estilo = configs[tipo];
@@ -28,6 +29,8 @@ export function ReportarModal({ tipo }: { tipo: "infiel" | "migajero" | "cachudo
     setLoading(true);
     
     const formData = new FormData(event.currentTarget);
+    
+    // COMO YA ACTUALIZASTE actions.ts, ESTO YA NO DA ERROR. ¡ESTÁ PERFECTO!
     await crearRegistro(formData, tipo);
     
     setLoading(false);
@@ -44,9 +47,9 @@ export function ReportarModal({ tipo }: { tipo: "infiel" | "migajero" | "cachudo
       </DialogTrigger>
       <DialogContent className="sm:max-w-[500px] bg-white mt-10 max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="text-gray-900 font-bold text-2xl capitalize">📝 Registro: {tipo}</DialogTitle>
+          <DialogTitle className="text-gray-900 font-bold text-2xl capitalize">📝 Registro: {tipo.replace("bandida", "Bandida Retirada")}</DialogTitle>
           <DialogDescription>
-            La comunidad te agradece tu aporte. 100% Anónimo.
+            Honor a quien honor merece. 100% Anónimo.
           </DialogDescription>
         </DialogHeader>
         
@@ -74,8 +77,8 @@ export function ReportarModal({ tipo }: { tipo: "infiel" | "migajero" | "cachudo
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="descripcion" className="font-bold">La Historia *</Label>
-            <Textarea id="descripcion" name="descripcion" required className="border-gray-200 min-h-[100px]" />
+            <Label htmlFor="descripcion" className="font-bold">La Historia (Hazañas) *</Label>
+            <Textarea id="descripcion" name="descripcion" required className="border-gray-200 min-h-[100px]" placeholder="Cuenta sus mejores tiempos..." />
           </div>
 
           <div className="space-y-2">

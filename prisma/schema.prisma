@@ -42,3 +42,15 @@ model Cachudo {
   iniciales   String?
   creadoEn    DateTime @default(now())
 }
+
+model BandidaRetirada {
+  id          Int      @id @default(autoincrement())
+  nombre      String
+  edad        Int?
+  ocupacion   String?
+  ciudad      String
+  descripcion String
+  redSocial   String?
+  iniciales   String?
+  creadoEn    DateTime @default(now())
+}
