@@ -1,16 +1,6 @@
-import { Instagram, Twitter, ShieldAlert, Heart, Mail } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Instagram, Twitter, ShieldAlert, Heart } from "lucide-react";
 
 export function Footer() {
-  
-  // Aquí configuramos el correo mágico
-  // Cambia "tu_correo@gmail.com" por el tuyo real donde recibirás los chismes
-  const emailDestino = "registronacionalec@gmail.com"; 
-  const asunto = "NUEVO REPORTE - Registro Nacional";
-  const cuerpo = `Hola, quiero reportar un caso para la base de datos:%0D%0A%0D%0A- Nombre del Infiel:%0D%0A- Ciudad:%0D%0A- Edad (aprox):%0D%0A- Ocupación:%0D%0A- La Historia (El Incidente):%0D%0A- Link de Red Social (Opcional):%0D%0A%0D%0A(Adjunta fotos si tienes pruebas 👀)`;
-
-  const mailtoLink = `mailto:${emailDestino}?subject=${asunto}&body=${cuerpo}`;
-
   return (
     <footer className="bg-gray-950 text-gray-400 py-12 mt-24 font-sans border-t border-gray-800">
       <div className="max-w-6xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-8 text-sm">
@@ -30,28 +20,17 @@ export function Footer() {
           </div>
         </div>
 
-        {/* COLUMNA 2: Botón de Reportar */}
+        {/* COLUMNA 2: Enlaces */}
         <div className="space-y-4">
-          <h4 className="text-white font-semibold tracking-wide uppercase text-xs">¿Tienes información?</h4>
-          <p className="text-xs text-gray-500">
-            Si conoces un caso que debe ser expuesto, envíanos los datos anónimamente.
-          </p>
-          
-          {/* BOTÓN MÁGICO DE CORREO */}
-          <Button 
-            asChild 
-            className="w-full bg-pink-600 hover:bg-pink-700 text-white font-bold shadow-lg shadow-pink-900/20"
-          >
-            <a href={mailtoLink}>
-              <Mail className="w-4 h-4 mr-2" />
-              Reportar Nuevo Caso
-            </a>
-          </Button>
-
-          <ul className="space-y-2 pt-2">
-            <li><a href="#" className="hover:text-pink-500 transition-colors text-xs">Politica de Privacidad</a></li>
-            <li><a href="#" className="hover:text-pink-500 transition-colors text-xs">Eliminar mis datos</a></li>
+          <h4 className="text-white font-semibold tracking-wide uppercase text-xs">Navegación</h4>
+          <ul className="space-y-2">
+            <li><a href="#" className="hover:text-pink-500 transition-colors">Inicio</a></li>
+            <li><a href="#" className="hover:text-pink-500 transition-colors">Buscar Infiel</a></li>
+            <li><a href="#" className="hover:text-pink-500 transition-colors">Politica de Privacidad</a></li>
           </ul>
+          <p className="text-xs text-gray-600 pt-2">
+            ¿Quieres reportar? Usa el botón rosa en la parte superior. ⬆️
+          </p>
         </div>
 
         {/* COLUMNA 3: El Mensaje Sarcástico */}
