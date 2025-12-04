@@ -8,12 +8,19 @@ const prisma = new PrismaClient();
 export const dynamic = 'force-dynamic';
 
 export default async function MigajerosPage() {
+  
+  const totalRegistros = await prisma.migajero.count();
+
+  const ciudadesGroup = await prisma.migajero.groupBy({
+    by: ['ciudad'],
+  });
+  const totalCiudades = ciudadesGroup.length;
+
   const lista = await prisma.migajero.findMany({ 
-    take: 200, // <--- Solo los últimos 200
+    
     orderBy: { creadoEn: 'desc' } 
   });
 
-  // CÁLCULO REAL: Filtramos los que se crearon hace menos de 7 días
   const nuevosEstaSemana = lista.filter(p => {
     const hace7dias = new Date();
     hace7dias.setDate(hace7dias.getDate() - 7);
@@ -21,15 +28,30 @@ export default async function MigajerosPage() {
   }).length;
 
   const stats = [
-    { icon: Users, label: "Migajeros", value: lista.length.toString(), color: "text-amber-500" },
-    // AHORA SÍ: Usamos el cálculo real
-    { icon: TrendingUp, label: "Esta Semana", value: `+${nuevosEstaSemana}`, color: "text-amber-600" },
-    { icon: Cookie, label: "Ciudades", value: new Set(lista.map(p => p.ciudad)).size.toString(), color: "text-amber-500" }
+    { 
+      icon: Users, 
+      label: "Migajeros Totales", 
+      value: totalRegistros.toString(), 
+      color: "text-amber-500" 
+    },
+    { 
+      icon: TrendingUp, 
+      label: "Esta Semana", 
+      value: `+${nuevosEstaSemana}`, 
+      color: "text-amber-600" 
+    },
+    { 
+      icon: Cookie, 
+      label: "Ciudades", 
+      value: totalCiudades.toString(), 
+      color: "text-amber-500" 
+    }
   ];
 
   return (
     <>
       <main className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50 font-sans pb-20 overflow-hidden relative pt-20">
+        
         <div className="relative p-6 md:p-12 z-10">
           <div className="max-w-4xl mx-auto text-center mb-16 space-y-8">
             <div className="space-y-4">

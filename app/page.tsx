@@ -10,41 +10,49 @@ export const dynamic = 'force-dynamic';
 
 export default async function Home() {
   
+  const totalRegistros = await prisma.infiel.count();
+
+  const ciudadesGroup = await prisma.infiel.groupBy({
+    by: ['ciudad'],
+  });
+  const totalCiudades = ciudadesGroup.length;
+
   const listaInfieles = await prisma.infiel.findMany({
-    take: 200, // <--- AQUÍ ESTÁ EL CAMBIO
+    
     orderBy: { creadoEn: 'desc' }
   });
+
+  const nuevosEstaSemana = listaInfieles.filter(p => {
+    const hace7dias = new Date();
+    hace7dias.setDate(hace7dias.getDate() - 7);
+    return new Date(p.creadoEn) > hace7dias;
+  }).length;
 
   const stats = [
     { 
       icon: Users, 
-      label: "Reportes", 
-      value: listaInfieles.length.toString(), 
+      label: "Reportes Totales", 
+      value: totalRegistros.toString(), 
       color: "text-pink-500" 
     },
     { 
       icon: TrendingUp, 
       label: "Esta Semana", 
-      value: `+${listaInfieles.filter(p => {
-        const hace7dias = new Date();
-        hace7dias.setDate(hace7dias.getDate() - 7);
-        return new Date(p.creadoEn) > hace7dias;
-      }).length}`, 
+      value: `+${nuevosEstaSemana}`, 
       color: "text-rose-500" 
     },
     { 
       icon: Shield, 
       label: "Ciudades", 
-      value: new Set(listaInfieles.map(p => p.ciudad)).size.toString(), 
+      value: totalCiudades.toString(), 
       color: "text-purple-500" 
     }
   ];
 
   return (
     <>
-      <main className="min-h-screen bg-gradient-to-br from-rose-50 via-pink-50 to-purple-50 font-sans selection:bg-pink-200 pb-20 overflow-hidden relative pt-20">
+      <main className="min-h-screen bg-gradient-to-br from-rose-50 via-pink-50 to-purple-50 font-sans selection:bg-pink-200 pb-20 overflow-hidden relative">
         
-        {/* Decoración de fondo */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <div className="absolute top-20 left-10 w-72 h-72 bg-pink-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
           <div className="absolute top-40 right-10 w-72 h-72 bg-rose-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
@@ -80,6 +88,7 @@ export default async function Home() {
                   </svg>
                 </span>
               </h1>
+              
               <p className="text-gray-600 text-lg md:text-xl font-medium max-w-2xl mx-auto leading-relaxed">
                 La base de datos del pueblo. Sube tu reporte anónimo o busca la verdad. 💅
               </p>
@@ -96,7 +105,6 @@ export default async function Home() {
             </div>
 
             <div className="flex justify-center pt-6">
-              {/* CAMBIO IMPORTANTE: Agregamos tipo="infiel" */}
               <ReportarModal tipo="infiel" />
             </div>
 

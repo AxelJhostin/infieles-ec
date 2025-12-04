@@ -8,13 +8,19 @@ const prisma = new PrismaClient();
 export const dynamic = 'force-dynamic';
 
 export default async function BandidasPage() {
-  // LEEMOS LA TABLA DE BANDIDAS
+  
+  const totalRegistros = await prisma.bandidaRetirada.count();
+
+  const ciudadesGroup = await prisma.bandidaRetirada.groupBy({
+    by: ['ciudad'],
+  });
+  const totalCiudades = ciudadesGroup.length;
+
   const lista = await prisma.bandidaRetirada.findMany({ 
-    take: 200, // <--- Solo las últimas 200
+    
     orderBy: { creadoEn: 'desc' } 
   });
 
-  // Cálculo de nuevas esta semana
   const nuevosEstaSemana = lista.filter(p => {
     const hace7dias = new Date();
     hace7dias.setDate(hace7dias.getDate() - 7);
@@ -22,9 +28,24 @@ export default async function BandidasPage() {
   }).length;
 
   const stats = [
-    { icon: Users, label: "Jubiladas", value: lista.length.toString(), color: "text-purple-500" },
-    { icon: TrendingUp, label: "Recientes", value: `+${nuevosEstaSemana}`, color: "text-purple-600" },
-    { icon: MapPin, label: "Ciudades", value: new Set(lista.map(p => p.ciudad)).size.toString(), color: "text-purple-500" }
+    { 
+      icon: Users, 
+      label: "Jubiladas", 
+      value: totalRegistros.toString(), 
+      color: "text-purple-500" 
+    },
+    { 
+      icon: TrendingUp, 
+      label: "Recientes", 
+      value: `+${nuevosEstaSemana}`, 
+      color: "text-purple-600" 
+    },
+    { 
+      icon: MapPin, 
+      label: "Ciudades", 
+      value: totalCiudades.toString(), 
+      color: "text-purple-500" 
+    }
   ];
 
   return (

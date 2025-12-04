@@ -8,12 +8,19 @@ const prisma = new PrismaClient();
 export const dynamic = 'force-dynamic';
 
 export default async function CachudosPage() {
+  
+  const totalRegistros = await prisma.cachudo.count();
+
+  const ciudadesGroup = await prisma.cachudo.groupBy({
+    by: ['ciudad'],
+  });
+  const totalCiudades = ciudadesGroup.length;
+
   const lista = await prisma.cachudo.findMany({ 
-    take: 200, // <--- Solo los últimos 200
+    
     orderBy: { creadoEn: 'desc' } 
   });
 
-  // CÁLCULO REAL
   const nuevosEstaSemana = lista.filter(p => {
     const hace7dias = new Date();
     hace7dias.setDate(hace7dias.getDate() - 7);
@@ -21,15 +28,30 @@ export default async function CachudosPage() {
   }).length;
 
   const stats = [
-    { icon: Users, label: "Soldados Caídos", value: lista.length.toString(), color: "text-blue-500" },
-    // AHORA SÍ: Usamos el cálculo real
-    { icon: TrendingUp, label: "Esta Semana", value: `+${nuevosEstaSemana}`, color: "text-blue-600" },
-    { icon: MapPin, label: "Ciudades", value: new Set(lista.map(p => p.ciudad)).size.toString(), color: "text-blue-500" }
+    { 
+      icon: Users, 
+      label: "Soldados Caídos", 
+      value: totalRegistros.toString(), 
+      color: "text-blue-500" 
+    },
+    { 
+      icon: TrendingUp, 
+      label: "Esta Semana", 
+      value: `+${nuevosEstaSemana}`, 
+      color: "text-blue-600" 
+    },
+    { 
+      icon: MapPin, 
+      label: "Ciudades", 
+      value: totalCiudades.toString(), 
+      color: "text-blue-500" 
+    }
   ];
 
   return (
     <>
       <main className="min-h-screen bg-gradient-to-br from-blue-50 via-sky-50 to-cyan-50 font-sans pb-20 overflow-hidden relative pt-20">
+        
         <div className="relative p-6 md:p-12 z-10">
           <div className="max-w-4xl mx-auto text-center mb-16 space-y-8">
             <div className="space-y-4">
@@ -62,4 +84,3 @@ export default async function CachudosPage() {
     </>
   );
 }
-//Cachudos

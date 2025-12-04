@@ -8,13 +8,19 @@ const prisma = new PrismaClient();
 export const dynamic = 'force-dynamic';
 
 export default async function MozasPage() {
-  // LEEMOS LA TABLA DE MOZAS
+  
+  const totalRegistros = await prisma.moza.count();
+
+  const ciudadesGroup = await prisma.moza.groupBy({
+    by: ['ciudad'],
+  });
+  const totalCiudades = ciudadesGroup.length;
+
   const lista = await prisma.moza.findMany({ 
-    take: 200, // <--- Solo las últimas 200
+    
     orderBy: { creadoEn: 'desc' } 
   });
 
-  // Cálculo real
   const nuevosEstaSemana = lista.filter(p => {
     const hace7dias = new Date();
     hace7dias.setDate(hace7dias.getDate() - 7);
@@ -22,16 +28,30 @@ export default async function MozasPage() {
   }).length;
 
   const stats = [
-    { icon: Users, label: "Registradas", value: lista.length.toString(), color: "text-fuchsia-500" },
-    { icon: TrendingUp, label: "Recientes", value: `+${nuevosEstaSemana}`, color: "text-fuchsia-600" },
-    // PREVENCIÓN DE ERROR ANY
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    { icon: MapPin, label: "Ciudades", value: new Set(lista.map((p: any) => p.ciudad)).size.toString(), color: "text-fuchsia-500" }
+    { 
+      icon: Users, 
+      label: "Registradas", 
+      value: totalRegistros.toString(), 
+      color: "text-fuchsia-500" 
+    },
+    { 
+      icon: TrendingUp, 
+      label: "Recientes", 
+      value: `+${nuevosEstaSemana}`, 
+      color: "text-fuchsia-600" 
+    },
+    { 
+      icon: MapPin, 
+      label: "Ciudades", 
+      value: totalCiudades.toString(), 
+      color: "text-fuchsia-500" 
+    }
   ];
 
   return (
     <>
       <main className="min-h-screen bg-gradient-to-br from-fuchsia-50 via-pink-50 to-rose-50 font-sans pb-20 overflow-hidden relative pt-20">
+        
         <div className="relative p-6 md:p-12 z-10">
           <div className="max-w-4xl mx-auto text-center mb-16 space-y-8">
             <div className="space-y-4">
@@ -56,7 +76,6 @@ export default async function MozasPage() {
             </div>
           </div>
           
-          {/* PREVENCIÓN DE ERROR ANY */}
           {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
           <HomeClient listaInicial={lista as any} />
         </div>
