@@ -5,11 +5,15 @@ import { ReportarModal } from "@/components/ReportarModal";
 import { Footer } from "@/components/Footer";
 
 const prisma = new PrismaClient();
-export const dynamic = 'force-dynamic';
+
+// CAMBIO CLAVE: En lugar de 'force-dynamic', usamos revalidate.
+// Esto guarda la página en memoria por 60 segundos.
+// Si entran 1000 personas en ese minuto, la base de datos solo trabaja 1 vez.
+export const revalidate = 60; 
 
 export default async function Home() {
   
-  // 1. Estadísticas Ligeras (Rápido)
+  // Estas consultas ahora se hacen solo 1 vez por minuto
   const totalRegistros = await prisma.infiel.count();
   
   const nuevosSemana = await prisma.infiel.count({
@@ -30,6 +34,8 @@ export default async function Home() {
   return (
     <>
       <main className="min-h-screen bg-gradient-to-br from-rose-50 via-pink-50 to-purple-50 font-sans selection:bg-pink-200 pb-20 overflow-hidden relative">
+        {/* ... (Todo el resto de tu diseño se mantiene igual) ... */}
+        
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <div className="absolute top-20 left-10 w-72 h-72 bg-pink-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
           <div className="absolute top-40 right-10 w-72 h-72 bg-rose-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
