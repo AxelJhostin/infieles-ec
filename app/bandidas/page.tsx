@@ -10,49 +10,25 @@ export const dynamic = 'force-dynamic';
 export default async function BandidasPage() {
   
   const totalRegistros = await prisma.bandidaRetirada.count();
-
-  const ciudadesGroup = await prisma.bandidaRetirada.groupBy({
-    by: ['ciudad'],
+  
+  const nuevosSemana = await prisma.bandidaRetirada.count({
+    where: { creadoEn: { gte: new Date(new Date().setDate(new Date().getDate() - 7)) } }
   });
+
+  const ciudadesGroup = await prisma.bandidaRetirada.groupBy({ by: ['ciudad'] });
   const totalCiudades = ciudadesGroup.length;
 
-  const lista = await prisma.bandidaRetirada.findMany({ 
-    
-    orderBy: { creadoEn: 'desc' } 
-  });
-
-  const nuevosEstaSemana = lista.filter(p => {
-    const hace7dias = new Date();
-    hace7dias.setDate(hace7dias.getDate() - 7);
-    return new Date(p.creadoEn) > hace7dias;
-  }).length;
-
   const stats = [
-    { 
-      icon: Users, 
-      label: "Jubiladas", 
-      value: totalRegistros.toString(), 
-      color: "text-purple-500" 
-    },
-    { 
-      icon: TrendingUp, 
-      label: "Recientes", 
-      value: `+${nuevosEstaSemana}`, 
-      color: "text-purple-600" 
-    },
-    { 
-      icon: MapPin, 
-      label: "Ciudades", 
-      value: totalCiudades.toString(), 
-      color: "text-purple-500" 
-    }
+    { icon: Users, label: "Jubiladas", value: totalRegistros.toString(), color: "text-purple-500" },
+    { icon: TrendingUp, label: "Recientes", value: `+${nuevosSemana}`, color: "text-purple-600" },
+    { icon: MapPin, label: "Ciudades", value: totalCiudades.toString(), color: "text-purple-500" }
   ];
 
   return (
     <>
       <main className="min-h-screen bg-gradient-to-br from-purple-50 via-fuchsia-50 to-pink-50 font-sans pb-20 overflow-hidden relative pt-20">
         <div className="relative p-6 md:p-12 z-10">
-          <div className="max-w-4xl mx-auto text-center mb-16 space-y-8">
+          <div className="max-w-4xl mx-auto text-center mb-10 space-y-8">
             <div className="space-y-4">
               <h1 className="text-5xl md:text-7xl font-extrabold text-gray-900 tracking-tighter">
                 Registro de <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-fuchsia-500">Bandidas</span> Retiradas 👑
@@ -75,8 +51,7 @@ export default async function BandidasPage() {
             </div>
           </div>
           
-          {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-          <HomeClient listaInicial={lista as any} />
+          <HomeClient tipo="bandida" totalInicial={totalRegistros} />
         </div>
       </main>
       <Footer />
